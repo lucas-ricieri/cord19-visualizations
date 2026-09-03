@@ -1,4 +1,3 @@
-# cord19-visualization
 # Cord19-Visualizations
 
 Este projeto implementa uma pipeline de análise exploratória e visualização da literatura científica sobre
