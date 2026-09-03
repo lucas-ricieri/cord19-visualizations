@@ -1,0 +1,6 @@
+# Checkpoints do Jupyter
+.ipynb_checkpoints/
+
+# Dados brutos e intermediários (grandes; regeneráveis pelos notebooks)
+dados/
+data/
