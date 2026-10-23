@@ -6,16 +6,16 @@ O fluxo está organizado em seis notebooks, com explicações e operações apre
 
 ## Visualizações
 
-[Acesse a página do projeto](https://lucas-ricieri.github.io/cord19-visualizations/).
+[Acesse a página do projeto](https://lucas-ricieri.github.io/cord19-visualizations/Page/).
 
 | Resultado | LDA — 20 tópicos | Streamgraph de autores |
 |---|---|---|
-| Amostra | [Explorar tópicos](outputs/amostras/lda.html) | [Explorar autores](outputs/amostras/streamgraph_autores.html) |
-| Completo | [Explorar tópicos](outputs/completos/lda.html) | [Explorar autores](outputs/completos/streamgraph_autores.html) |
+| Amostra | [Explorar tópicos](https://lucas-ricieri.github.io/cord19-visualizations/outputs/amostras/lda.html) | [Explorar autores](https://lucas-ricieri.github.io/cord19-visualizations/outputs/amostras/streamgraph_autores.html) |
+| Completo | [Explorar tópicos](https://lucas-ricieri.github.io/cord19-visualizations/outputs/completos/lda.html) | [Explorar autores](https://lucas-ricieri.github.io/cord19-visualizations/outputs/completos/streamgraph_autores.html) |
 
 Na versão amostrada do LDA, são selecionados 200 mil documentos sem reposição. No streamgraph completo, são considerados os 15% de nomes com mais publicações; a versão amostrada sorteia 50 mil nomes dentro desse grupo e preserva suas contagens de produção. Os dois sorteios usam semente 42.
 
-Para visualizar os resultados sem executar o processamento, use a página publicada ou abra `Page/index.html` localmente. Os links da tabela acima apontam para os arquivos HTML no repositório.
+Para visualizar os resultados sem executar o processamento, use a página publicada ou abra `Page/index.html` localmente. Os links da tabela acima abrem diretamente as visualizações publicadas no GitHub Pages.
 
 ## Dados necessários
 
