@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CORD-19 · Visualizações</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f7fa; color: #17324d; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 880px; margin: 0 auto; padding: 64px 24px; }
+    .eyebrow { color: #557086; font-size: .9rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin: 12px 0 20px; }
+    .intro { max-width: 650px; color: #557086; }
+    .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 36px; }
+    section { background: white; padding: 28px; border: 1px solid #dbe3ea; border-radius: 12px; }
+    h2 { margin: 0 0 12px; font-size: 1.4rem; }
+    section p { color: #557086; }
+    a { display: block; color: #155a92; font-weight: 600; padding: 12px 0; text-underline-offset: 4px; }
+    a:focus-visible { outline: 3px solid #155a92; outline-offset: 4px; }
+    footer { margin-top: 32px; color: #557086; font-size: .85rem; }
+    @media (max-width: 600px) { main { padding-top: 36px; } .results { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">CORD-19 · Publicações de 2020 a 2022</div>
+    <h1>Explore as visualizações</h1>
+    <p class="intro">Tópicos da literatura científica sobre COVID-19 e produção dos autores ao longo dos anos.</p>
+    <div class="results">
+      <section aria-labelledby="sample-title">
+        <h2 id="sample-title">Amostras</h2>
+        <p>LDA com seleção de 200 mil artigos e streamgraph com 50 mil nomes sorteados entre os 15% mais produtivos.</p>
+        <a href="../outputs/amostras/lda.html">Explorar tópicos · LDA com 20 tópicos</a>
+        <a href="../outputs/amostras/streamgraph_autores.html">Explorar autores · Streamgraph</a>
+      </section>
+      <section aria-labelledby="full-title">
+        <h2 id="full-title">Resultados completos</h2>
+        <p>LDA do corpus completo e streamgraph dos 15% de nomes com mais publicações.</p>
+        <a href="../outputs/completos/lda.html">Explorar tópicos · LDA com 20 tópicos</a>
+        <a href="../outputs/completos/streamgraph_autores.html">Explorar autores · Streamgraph</a>
+      </section>
+    </div>
+    <footer>Fonte: CORD-19, release de 2 de junho de 2022. A cobertura de 2022 é parcial.</footer>
+  </main>
+</body>
+</html>

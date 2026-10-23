@@ -1,0 +1,3 @@
+﻿recurso,fonte,url,destino
+metadata.csv,Allen Institute for AI / CORD-19 (release 2022-06-02),https://ai2-semanticscholar-cord-19.s3-us-west-2.amazonaws.com/2022-06-02/metadata.csv,data/raw/cord19_2022-06-02/metadata.csv
+checkpoint_enriquecimento.json,Arquivo bibliográfico fornecido pelo autor do projeto,,data/checkpoints/recuperacao_dados/checkpoint_enriquecimento.json
