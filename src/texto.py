@@ -16,10 +16,9 @@ from . import config as cfg
 from .io_utils import atomic_json, atomic_parquet
 
 
-# Localiza os dados e o modelo do conjunto completo ou da amostra atual.
-def lda_paths(sample=False):
-    name = 'amostra' if sample else 'completo'
-    return cfg.STAGED / 'lda' / name, cfg.CURATED / 'lda' / name / 'k20'
+# Localiza os dados e o modelo do corpus completo.
+def lda_paths():
+    return cfg.STAGED / 'lda' / 'completo', cfg.CURATED / 'lda' / 'completo' / 'k20'
 
 
 # Lê os tokens em blocos e aplica os bigramas quando fornecidos.
@@ -86,26 +85,6 @@ def preprocess(batch_size=cfg.TEXT_BATCH_SIZE, progress=None):
     return result
 
 
-# Sorteia os IDs atuais e grava seus tokens sem refiltragem ou compatibilidade histórica.
-def prepare_sample(size=cfg.LDA_SAMPLE_SIZE, seed=cfg.RANDOM_SEED):
-    ids = pd.read_parquet(cfg.STAGED / '06_ordem_documentos.parquet')
-    selected = ids.sample(n=size, replace=False, random_state=seed).sort_values('doc_index')
-    folder, _ = lda_paths(sample=True)
-    folder.mkdir(parents=True, exist_ok=True)
-    atomic_parquet(folder / 'amostra_documentos.parquet', selected)
-    wanted = set(selected['cord_uid'])
-    destination = folder / '05_tokens.parquet'
-    schema = pa.schema([('cord_uid', pa.string()), ('tokens', pa.list_(pa.string()))])
-    with pq.ParquetWriter(destination, schema, compression='zstd') as writer:
-        for batch in pq.ParquetFile(cfg.STAGED / '05_tokens.parquet').iter_batches(batch_size=1000):
-            frame = batch.to_pandas()
-            frame = frame.loc[frame['cord_uid'].isin(wanted)]
-            writer.write_table(pa.Table.from_pandas(frame, schema=schema, preserve_index=False))
-    result = {'universo': len(ids), 'documentos': len(selected), 'seed': seed, 'metodo': 'aleatoria_simples_sem_reposicao'}
-    atomic_json(folder / 'amostragem.json', result)
-    return result
-
-
 # Produz um vetor por vez e registra quais IDs têm termos no dicionário.
 def bow_records(source, dictionary, phrases, kept, omitted):
     for uid, words in token_records(source, phrases):
@@ -118,10 +97,10 @@ def bow_records(source, dictionary, phrases, kept, omitted):
 
 
 # Grava o BOW e os IDs na mesma ordem, mantendo o corpus no disco.
-def save_corpus(dictionary, phrases, sample=False):
-    folder, _ = lda_paths(sample)
+def save_corpus(dictionary, phrases):
+    folder, _ = lda_paths()
     folder.mkdir(parents=True, exist_ok=True)
-    source = folder / '05_tokens.parquet' if sample else cfg.STAGED / '05_tokens.parquet'
+    source = cfg.STAGED / '05_tokens.parquet'
     kept, omitted = [], []
     path = folder / '06_corpus.mm'
     MmCorpus.serialize(str(path), bow_records(source, dictionary, phrases, kept, omitted))
@@ -136,14 +115,14 @@ def save_corpus(dictionary, phrases, sample=False):
 
 
 # Carrega somente o dicionário e o BOW do conjunto atual solicitado.
-def load_dictionary_and_corpus(sample=False):
-    folder, _ = lda_paths(sample)
+def load_dictionary_and_corpus():
+    folder, _ = lda_paths()
     return Dictionary.load(str(folder / '06_dicionario.dict')), MmCorpus(str(folder / '06_corpus.mm'))
 
 
 # Registra métricas e termos dos vinte tópicos do modelo atual.
-def save_lda_results(model, dictionary, corpus, sample=False):
-    _, folder = lda_paths(sample)
+def save_lda_results(model, dictionary, corpus):
+    _, folder = lda_paths()
     folder.mkdir(parents=True, exist_ok=True)
     model.save(str(folder / 'modelo_k20.model'))
     terms = [{'topico': topic, 'termos': ', '.join(word for word, _ in model.show_topic(topic, topn=10)),

@@ -2,20 +2,20 @@
 
 Projeto desenvolvido no contexto de um Trabalho de Conclusão de Curso (TCC) para explorar publicações do CORD-19 entre 2020 e 2022. O processamento combina curadoria bibliográfica, modelagem de tópicos com LDA e visualização da produção de autores ao longo dos anos.
 
-O fluxo está organizado em seis notebooks, com explicações e operações apresentadas passo a passo. Os módulos em `src/` concentram rotinas de apoio.
+O fluxo está organizado em cinco notebooks, com explicações e operações apresentadas passo a passo. Os módulos em `src/` concentram rotinas de apoio.
 
 ## Visualizações
 
 [Acesse a página do projeto](https://lucas-ricieri.github.io/cord19-visualizations/Page/).
 
-| Resultado | LDA — 20 tópicos | Streamgraph de autores |
-|---|---|---|
-| Amostra | [Explorar tópicos](https://lucas-ricieri.github.io/cord19-visualizations/outputs/amostras/lda.html) | [Explorar autores](https://lucas-ricieri.github.io/cord19-visualizations/outputs/amostras/streamgraph_autores.html) |
-| Completo | [Explorar tópicos](https://lucas-ricieri.github.io/cord19-visualizations/outputs/completos/lda.html) | [Explorar autores](https://lucas-ricieri.github.io/cord19-visualizations/outputs/completos/streamgraph_autores.html) |
+| Visualização | Acesso |
+|---|---|
+| LDA — 20 tópicos | [Explorar tópicos](https://lucas-ricieri.github.io/cord19-visualizations/outputs/visualizations/lda.html) |
+| Streamgraph de autores | [Explorar autores](https://lucas-ricieri.github.io/cord19-visualizations/outputs/visualizations/streamgraph_autores.html) |
 
-Na versão amostrada do LDA, são selecionados 200 mil documentos sem reposição. No streamgraph completo, são considerados os 15% de nomes com mais publicações; a versão amostrada sorteia 50 mil nomes dentro desse grupo e preserva suas contagens de produção. Os dois sorteios usam semente 42.
+O LDA utiliza o corpus completo após a curadoria e os filtros textuais. O streamgraph usa o ranking dos 15% de nomes com mais publicações, calculado sobre esse corpus, preservando suas contagens completas.
 
-Para visualizar os resultados sem executar o processamento, use a página publicada ou abra `Page/index.html` localmente. Os links da tabela acima abrem diretamente as visualizações publicadas no GitHub Pages.
+Para visualizar os resultados sem executar o processamento, use a página publicada ou abra `Page/index.html` localmente. Os links acima abrem diretamente as visualizações publicadas no GitHub Pages.
 
 ## Dados necessários
 
@@ -28,7 +28,7 @@ Os conteúdos da pasta `data/`, **exceto o arquivo bruto do CORD-19 (`metadata.c
 | `metadata.csv` | [Download do CSV](https://ai2-semanticscholar-cord-19.s3-us-west-2.amazonaws.com/2022-06-02/metadata.csv) · [Repositório oficial do CORD-19](https://github.com/allenai/cord19) | `data/raw/cord19_2022-06-02/metadata.csv` |
 | `checkpoint_enriquecimento.json` | Incluído no [pacote de dados no Google Drive](https://drive.google.com/drive/folders/1oKGwwVravFk7TFOE_JDjkpXKYSpbUHkl?usp=sharing) | `data/checkpoints/recuperacao_dados/checkpoint_enriquecimento.json` |
 
-O download do CSV é manual. O fluxo principal lê o checkpoint para preencher campos ausentes e não faz novas consultas ao OpenAlex. Os dados brutos, os checkpoints e os modelos não acompanham o repositório; os quatro HTMLs finais estão incluídos.
+O download do CSV é manual. O fluxo principal lê o checkpoint para preencher campos ausentes e não faz novas consultas ao OpenAlex. Os dados brutos, os checkpoints e os modelos não acompanham o repositório; os dois HTMLs finais estão incluídos.
 
 As fontes e os destinos também estão registrados em [configuracao/fontes_dados.csv](configuracao/fontes_dados.csv).
 
@@ -80,12 +80,11 @@ Selecione o ambiente virtual como kernel e execute os notebooks nesta ordem:
 | [02_enriquecimento_consolidacao.ipynb](notebooks/02_enriquecimento_consolidacao.ipynb) | Aplicação do checkpoint e consolidação dos registros |
 | [03_exploracao_periodo.ipynb](notebooks/03_exploracao_periodo.ipynb) | Curadoria dos conflitos de DOI e recorte de 2020 a 2022 |
 | [04_lda.ipynb](notebooks/04_lda.ipynb) | Processamento textual, corpus BOW, LDA completo e pyLDAvis |
-| [05_streamgraph_autores.ipynb](notebooks/05_streamgraph_autores.ipynb) | Contagem de autorias, ranking, amostragem, CSVs e streamgraphs |
-| [06_amostragem_lda.ipynb](notebooks/06_amostragem_lda.ipynb) | Amostragem dos documentos, LDA e pyLDAvis amostrado |
+| [05_streamgraph_autores.ipynb](notebooks/05_streamgraph_autores.ipynb) | Contagem de autorias, ranking, CSVs e streamgraph completo |
 
 ### Pelo terminal
 
-Para executar os seis notebooks sequencialmente:
+Para executar os cinco notebooks sequencialmente:
 
 ```bash
 python -m src.executar_pipeline
@@ -111,14 +110,13 @@ O executor registra a duração de cada notebook em `execucao_notebooks.json`, n
 
 ```text
 .
-├── Page/                  # Landing page das quatro visualizações
+├── Page/                  # Landing page das duas visualizações
 ├── configuracao/          # Fontes dos dados e decisões sobre conflitos de DOI
 ├── data/                  # Entradas e dados gerados localmente; fora do Git
 ├── notebooks/             # Seis etapas do fluxo principal
 │   └── enriquecimento/    # Coletor original OpenAlex, separado do pipeline
 ├── outputs/
-│   ├── amostras/          # HTMLs amostrados do LDA e do streamgraph
-│   ├── completos/         # HTMLs completos do LDA e do streamgraph
+│   ├── visualizations/    # HTMLs completos do LDA e do streamgraph
 │   └── tables/            # CSVs e registros gerados na execução local
 ├── src/                   # Configuração, processamento e exportação
 ├── .env.example
@@ -126,11 +124,11 @@ O executor registra a duração de cada notebook em `execucao_notebooks.json`, n
 └── requirements.txt
 ```
 
-Além dos quatro HTMLs, a execução local produz tokens, dicionários, corpora, modelos e métricas em `data/`. Os CSVs de autores em `outputs/tables/` incluem o ranking completo, os 15% selecionados, os 25 primeiros e a amostra de 50 mil nomes. 
+Além dos dois HTMLs, a execução local produz tokens, dicionários, corpora, modelos e métricas em `data/`. Os CSVs de autores em `outputs/tables/` incluem o ranking completo, os 15% selecionados e os 25 primeiros.
 
 ## Critérios de análise
 
-- **Texto e tópicos:** títulos e resumos passam por lematização com spaCy, remoção de stopwords, formação de bigramas e construção de bag of words. Ambos os LDAs usam Gensim, 20 tópicos, dez passagens e aprendizagem online em minilotes de até 2.000 documentos.
+- **Texto e tópicos:** títulos e resumos passam por lematização com spaCy, remoção de stopwords, formação de bigramas e construção de bag of words. O LDA usa Gensim, 20 tópicos, dez passagens e aprendizagem online em minilotes de até 2.000 documentos.
 - **Autores:** cada par artigo × nome normalizado é contado uma vez. Cada coautor recebe uma publicação inteira; a soma das camadas representa autorias. Nomes são normalizados; grupos e instituições permanecem na base.
 - **Período:** as séries do streamgraph têm três observações anuais, de 2020 a 2022. As curvas entre anos são interpolações visuais. O release de junho não cobre todo o ano de 2022.
 
@@ -140,4 +138,8 @@ Os parâmetros estão em [src/config.py](src/config.py), e os cinco grupos de DO
 
 O [notebook de coleta OpenAlex](notebooks/enriquecimento/01_coleta_openalex.ipynb)  está separado do fluxo principal e desativado por padrão (`EXECUTAR_CONSULTAS=False`). Nessa configuração, não envia requisições nem grava arquivos.
 
-Esse artefato documenta a origem do enriquecimento. A execução dos seis notebooks utiliza o checkpoint já fornecido.
+Esse artefato documenta a origem do enriquecimento. A execução dos cinco notebooks utiliza o checkpoint já fornecido.
+
+## Versão anterior
+
+A [branch `old-version`](https://github.com/lucas-ricieri/cord19-visualizations/tree/old-version) preserva o projeto anterior, com quatro visualizações: LDA e streamgraph completos e amostrados. A `main` gera somente as duas visualizações completas.

@@ -27,7 +27,7 @@ el('limit').value=dataset.padrao;el('limit').max=Math.max(1,all.length);
  document.title='CORD-19 · Autores · '+dataset.granularidade;
  el('heading').textContent=dataset.titulo;
  el('chart').setAttribute('aria-label','Streamgraph '+dataset.granularidade+' de publicações por nome de autor');
- el('notice').textContent=fmt(all.length)+(dataset.amostra?' nomes sorteados entre os 15% mais produtivos; ':' nomes nos 15% selecionados; ')+fmt(dataset.padrao)+' nomes iniciais. Séries anuais incluem também publicações sem mês conhecido.';
+ el('notice').textContent=fmt(all.length)+' nomes nos 15% selecionados; '+fmt(dataset.padrao)+' nomes iniciais. Séries anuais incluem também publicações sem mês conhecido.';
  el('explanation').textContent='A espessura indica publicações no período. Cada nome recebe uma publicação inteira por artigo; a soma das camadas conta autorias. A altura absoluta da camada não representa uma contagem. Há três observações anuais; a curva entre elas é apenas interpolação visual. A base é do release de 02/06/2022 e não representa toda a produção de 2022.';
 
 function filtered(){

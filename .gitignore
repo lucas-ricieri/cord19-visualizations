@@ -11,13 +11,9 @@ debug.log
 # Dados brutos, checkpoints e modelos são fornecidos separadamente
 data/
 
-# Publicar somente as quatro visualizações finais
+# Publicar somente as duas visualizações finais
 outputs/*
-!outputs/amostras/
-!outputs/completos/
-outputs/amostras/*
-outputs/completos/*
-!outputs/amostras/lda.html
-!outputs/amostras/streamgraph_autores.html
-!outputs/completos/lda.html
-!outputs/completos/streamgraph_autores.html
+!outputs/visualizations/
+outputs/visualizations/*
+!outputs/visualizations/lda.html
+!outputs/visualizations/streamgraph_autores.html

@@ -24,7 +24,6 @@ NULL_VALUES = ['', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN',
                '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>', 'N/A', 'NA',
                'NULL', 'NaN', 'None', 'n/a', 'nan', 'null']
 LDA_NUM_TOPICS = 20
-LDA_SAMPLE_SIZE = 200_000
 LDA_EXTRA_STOPWORDS = frozenset({
     'article', 'describe', 'discuss', 'examine', 'include', 'investigate',
     'need', 'paper', 'present', 'provide', 'relate', 'report', 'show',
@@ -37,7 +36,6 @@ LDA_PASSES, LDA_CHUNKSIZE = 10, 2000
 PYLDAVIS_MDS = 'mmds'
 AUTHOR_TOP_FRACTION = 0.15
 AUTHOR_DEFAULT_VISIBLE = 25
-AUTHOR_SAMPLE_SIZE = 50_000
 AUTHOR_COLORS = (
     '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
     '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab',
@@ -49,11 +47,10 @@ AUTHOR_COLORS = (
 
 def ensure_directories():
     for path in [RAW, STAGED, CURATED / 'lda', CURATED / 'autores', DOCS,
-                 OUTPUTS / 'completos', OUTPUTS / 'tables',
-                 OUTPUTS / 'amostras',
+                 OUTPUTS / 'visualizations', OUTPUTS / 'tables',
                  RECOVERY, LDA_CHECKPOINTS,
-                 STAGED / 'lda' / 'completo', STAGED / 'lda' / 'amostra',
-                 CURATED / 'lda' / 'completo' / 'k20', CURATED / 'lda' / 'amostra' / 'k20']:
+                 STAGED / 'lda' / 'completo',
+                 CURATED / 'lda' / 'completo' / 'k20']:
         path.mkdir(parents=True, exist_ok=True)
 
 

@@ -37,7 +37,7 @@ def execute_notebook(path, reprocess=False):
 
 # Cronometra cada notebook e guarda o registro fora da pasta principal do código.
 def main():
-    parser = argparse.ArgumentParser(description='Executa os seis notebooks do bruto aos quatro HTMLs.')
+    parser = argparse.ArgumentParser(description='Executa os cinco notebooks do bruto às duas visualizações HTML.')
     parser.add_argument('--notebook', help='Executa somente o notebook com este prefixo, por exemplo 04.')
     parser.add_argument('--reprocessar', action='store_true', help='Refaz lemas, corpus e modelos; mantém checkpoints dos lemas.')
     args = parser.parse_args()
