@@ -11,9 +11,10 @@ debug.log
 # Dados brutos, checkpoints e modelos são fornecidos separadamente
 data/
 
-# Publicar somente as duas visualizações finais
+# Publicar as três visualizações finais
 outputs/*
 !outputs/visualizations/
 outputs/visualizations/*
 !outputs/visualizations/lda.html
 !outputs/visualizations/streamgraph_autores.html
+!outputs/visualizations/streamgraph_autores_mensal.html

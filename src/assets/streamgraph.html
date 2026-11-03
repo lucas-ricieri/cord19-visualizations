@@ -20,6 +20,7 @@
 const dataset=JSON.parse(document.getElementById('data').textContent);
 const periods=dataset.periodos;
 const all=dataset.itens;
+const monthly=dataset.granularidade==='mensal';
 const el=id=>document.getElementById(id),svg=d3.select('#chart'),tip=el('tooltip'),fmt=value=>Number(value).toLocaleString('pt-BR');
 const byId=new Map(all.map(item=>[item.id,item]));
 const color=id=>dataset.cores[(byId.get(id).posicao-1)%dataset.cores.length];
@@ -27,8 +28,9 @@ el('limit').value=dataset.padrao;el('limit').max=Math.max(1,all.length);
  document.title='CORD-19 · Autores · '+dataset.granularidade;
  el('heading').textContent=dataset.titulo;
  el('chart').setAttribute('aria-label','Streamgraph '+dataset.granularidade+' de publicações por nome de autor');
- el('notice').textContent=fmt(all.length)+' nomes nos 15% selecionados; '+fmt(dataset.padrao)+' nomes iniciais. Séries anuais incluem também publicações sem mês conhecido.';
- el('explanation').textContent='A espessura indica publicações no período. Cada nome recebe uma publicação inteira por artigo; a soma das camadas conta autorias. A altura absoluta da camada não representa uma contagem. Há três observações anuais; a curva entre elas é apenas interpolação visual. A base é do release de 02/06/2022 e não representa toda a produção de 2022.';
+ el('notice').textContent=fmt(all.length)+' nomes nos 15% selecionados; '+fmt(dataset.padrao)+' nomes iniciais. '+(monthly?'Ranking e séries consideram somente contribuições com mês conhecido.':'Séries anuais incluem também publicações sem mês conhecido.');
+ el('explanation').textContent='A espessura indica publicações no período. Cada nome recebe uma publicação inteira por artigo; a soma das camadas conta autorias. A altura absoluta da camada não representa uma contagem. '+(monthly?'Contribuições sem mês conhecido são excluídas, sem atribuição de mês artificial. Meses sem registros elegíveis recebem zero; a curva entre meses é interpolação visual.':'Há três observações anuais; a curva entre elas é apenas interpolação visual.')+' A base é do release de 02/06/2022 e não representa toda a produção de 2022.';
+ if(monthly){el('min-label').textContent='Publicações com mês — mínimo';el('max-label').textContent='Publicações com mês — máximo';}
 
 function filtered(){
  const min=Number(el('min').value||0),max=el('max').value===''?Infinity:Number(el('max').value);
@@ -52,7 +54,7 @@ function renderChart(items){
  const area=d3.area().x((d,i)=>x(i)).y0(d=>y(d[0])).y1(d=>y(d[1])).curve(d3.curveMonotoneX);
  svg.selectAll('path.layer').data(layers).join('path').attr('class','layer').attr('d',area).attr('fill',layer=>color(layer.key)).on('pointermove',function(event,layer){
   const item=byId.get(layer.key),i=Math.max(0,Math.min(periods.length-1,Math.round(x.invert(d3.pointer(event,svg.node())[0]))));
-  tip.textContent=item.nome+'\nPosição: #'+fmt(item.posicao)+' · Total no corpus: '+fmt(item.total)+' publicações\n'+periods[i]+': '+fmt(item.serie[i])+' publicações\nPublicações com mês: '+fmt(item.com_mes)+' · Sem mês: '+fmt(item.sem_mes);
+  tip.textContent=item.nome+'\nPosição: #'+fmt(item.posicao)+(monthly?' · Total com mês conhecido: ':' · Total no corpus: ')+fmt(item.total)+' publicações\n'+periods[i]+': '+fmt(item.serie[i])+' publicações\n'+(monthly?'Contribuições sem mês excluídas: '+fmt(item.sem_mes):'Publicações com mês: '+fmt(item.com_mes)+' · Sem mês: '+fmt(item.sem_mes));
   tip.style.display='block';tip.style.left=Math.max(10,Math.min(event.clientX+15,window.innerWidth-430))+'px';tip.style.top=Math.max(10,Math.min(event.clientY+15,window.innerHeight-180))+'px';
  }).on('pointerleave',()=>tip.style.display='none');
  const ticks=periods.length<=6?d3.range(periods.length):[...new Set([...d3.range(0,periods.length,6),periods.length-1])];
