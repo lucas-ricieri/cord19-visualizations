@@ -5,12 +5,27 @@ from pathlib import Path
 from . import config as cfg
 
 
+# Integra o fragmento do pyLDAvis ao tema, preservando seus dados e controles.
+def write_lda_page(content, destination):
+    start, end = '<!-- LDA_CONTENT_START -->', '<!-- LDA_CONTENT_END -->'
+    if start in content:
+        content = content.split(start, 1)[1].split(end, 1)[0]
+    content = content.strip('\n')
+    assets = Path(__file__).parent / 'assets'
+    template = (assets / 'lda.html').read_text(encoding='utf-8')
+    style = (assets / 'site.css').read_text(encoding='utf-8')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(template.replace('__SITE_STYLE__', style).replace('__LDA_CONTENT__', content), encoding='utf-8')
+    return destination
+
+
 # Incorpora D3 e dados no HTML para abertura sem internet.
 def write_streamgraph(payload):
     encoded = json.dumps(payload, ensure_ascii=False, separators=(',', ':')).translate(
         {ord('<'): r'\u003c', ord('>'): r'\u003e', ord('&'): r'\u0026'})
     assets = Path(__file__).parent / 'assets'
     template = (assets / 'streamgraph.html').read_text(encoding='utf-8')
+    template = template.replace('__SITE_STYLE__', (assets / 'site.css').read_text(encoding='utf-8'))
     d3 = (assets / 'd3.v7.min.js').read_text(encoding='utf-8')
     folder = cfg.OUTPUTS / 'visualizations'
     folder.mkdir(parents=True, exist_ok=True)

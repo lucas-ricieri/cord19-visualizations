@@ -1,4 +1,28 @@
-
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CORD-19 · Modelagem de tópicos</title>
+  <style>.site-back{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;margin-bottom:20px;border:1px solid #b9c8d4;border-radius:8px;background:white;color:#155a92;font:600 15px system-ui,sans-serif;text-decoration:none}
+.site-back:hover{background:#edf4fa}
+.site-back:focus-visible{outline:3px solid #155a92;outline-offset:3px}
+body.topic-page{margin:0;background:#f5f7fa;color:#17324d;font:15px/1.6 system-ui,sans-serif}
+.topic-page .site-main{max-width:1440px;margin:auto;padding:32px;box-sizing:border-box}
+.topic-page .site-eyebrow{color:#557086;margin:0 0 8px}
+.topic-page .site-heading{font-size:28px;line-height:1.2;margin:0 0 24px}
+.topic-page .lda-panel{background:white;border:1px solid #dbe3ea;border-radius:12px;padding:20px;overflow-x:auto}
+.topic-page .lda-panel:focus-visible{outline:3px solid #155a92;outline-offset:3px}
+@media(max-width:650px){.topic-page .site-main{padding:16px}.topic-page .site-heading{font-size:23px}.topic-page .lda-panel{padding:12px}}
+</style>
+</head>
+<body class="topic-page">
+  <main class="site-main">
+    <a class="site-back" href="../../Page/index.html">← Voltar à página inicial</a>
+    <p class="site-eyebrow">CORD-19 · 2020–2022</p>
+    <h1 class="site-heading">Modelagem de tópicos — LDA com 20 tópicos</h1>
+    <section class="lda-panel" aria-label="Visualização interativa de tópicos com pyLDAvis" tabindex="0">
+<!-- LDA_CONTENT_START -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/bmabey/pyLDAvis@3.4.0/pyLDAvis/js/ldavis.v1.0.0.css">
 
 
@@ -39,3 +63,8 @@ if(typeof(LDAvis) !== "undefined"){
          });
 }
 </script>
+<!-- LDA_CONTENT_END -->
+    </section>
+  </main>
+</body>
+</html>

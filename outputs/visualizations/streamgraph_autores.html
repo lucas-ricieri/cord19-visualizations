@@ -1,10 +1,22 @@
 <!doctype html>
 <html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CORD-19 · Streamgraph</title>
+<style>.site-back{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;margin-bottom:20px;border:1px solid #b9c8d4;border-radius:8px;background:white;color:#155a92;font:600 15px system-ui,sans-serif;text-decoration:none}
+.site-back:hover{background:#edf4fa}
+.site-back:focus-visible{outline:3px solid #155a92;outline-offset:3px}
+body.topic-page{margin:0;background:#f5f7fa;color:#17324d;font:15px/1.6 system-ui,sans-serif}
+.topic-page .site-main{max-width:1440px;margin:auto;padding:32px;box-sizing:border-box}
+.topic-page .site-eyebrow{color:#557086;margin:0 0 8px}
+.topic-page .site-heading{font-size:28px;line-height:1.2;margin:0 0 24px}
+.topic-page .lda-panel{background:white;border:1px solid #dbe3ea;border-radius:12px;padding:20px;overflow-x:auto}
+.topic-page .lda-panel:focus-visible{outline:3px solid #155a92;outline-offset:3px}
+@media(max-width:650px){.topic-page .site-main{padding:16px}.topic-page .site-heading{font-size:23px}.topic-page .lda-panel{padding:12px}}
+</style>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#17324d;font:15px system-ui,sans-serif}main{max-width:1300px;margin:auto;padding:32px}h1{font-size:28px;margin-bottom:8px}.muted{color:#557086}section{background:white;border:1px solid #dbe3ea;border-radius:12px;padding:20px;margin:18px 0}.controls{display:flex;gap:16px;flex-wrap:wrap}label{display:grid;gap:6px}input{font:inherit;padding:8px;border:1px solid #b9c8d4;border-radius:6px}input[type=number]{width:120px}svg{width:100%;height:460px}.tooltip{position:fixed;pointer-events:none;display:none;background:#17324d;color:white;max-width:min(420px,calc(100vw - 20px));padding:12px;border-radius:8px;z-index:5;white-space:pre-line}.axis{font-size:12px;color:#557086}#notice{padding:10px;background:#edf4fa;border-radius:6px}#legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px}.swatch{display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:2px}@media(max-width:650px){main{padding:16px}h1{font-size:23px}}
 </style>
 <main>
+<a class="site-back" href="../../Page/index.html">← Voltar à página inicial</a>
 <p class="muted">CORD-19 · 2020–2022</p><h1 id="heading">Publicações por nome de autor</h1>
 <div id="notice"></div>
 <section class="controls">
@@ -22,6 +34,7 @@
 const dataset=JSON.parse(document.getElementById('data').textContent);
 const periods=dataset.periodos;
 const all=dataset.itens;
+const monthly=dataset.granularidade==='mensal';
 const el=id=>document.getElementById(id),svg=d3.select('#chart'),tip=el('tooltip'),fmt=value=>Number(value).toLocaleString('pt-BR');
 const byId=new Map(all.map(item=>[item.id,item]));
 const color=id=>dataset.cores[(byId.get(id).posicao-1)%dataset.cores.length];
@@ -29,8 +42,9 @@ el('limit').value=dataset.padrao;el('limit').max=Math.max(1,all.length);
  document.title='CORD-19 · Autores · '+dataset.granularidade;
  el('heading').textContent=dataset.titulo;
  el('chart').setAttribute('aria-label','Streamgraph '+dataset.granularidade+' de publicações por nome de autor');
- el('notice').textContent=fmt(all.length)+' nomes nos 15% selecionados; '+fmt(dataset.padrao)+' nomes iniciais. Séries anuais incluem também publicações sem mês conhecido.';
- el('explanation').textContent='A espessura indica publicações no período. Cada nome recebe uma publicação inteira por artigo; a soma das camadas conta autorias. A altura absoluta da camada não representa uma contagem. Há três observações anuais; a curva entre elas é apenas interpolação visual. A base é do release de 02/06/2022 e não representa toda a produção de 2022.';
+ el('notice').textContent=fmt(all.length)+' nomes nos 15% selecionados; '+fmt(dataset.padrao)+' nomes iniciais. '+(monthly?'Ranking e séries consideram somente contribuições com mês conhecido.':'Séries anuais incluem também publicações sem mês conhecido.');
+ el('explanation').textContent='A espessura indica publicações no período. Cada nome recebe uma publicação inteira por artigo; a soma das camadas conta autorias. A altura absoluta da camada não representa uma contagem. '+(monthly?'Contribuições sem mês conhecido são excluídas, sem atribuição de mês artificial. Meses sem registros elegíveis recebem zero; a curva entre meses é interpolação visual.':'Há três observações anuais; a curva entre elas é apenas interpolação visual.')+' A base é do release de 02/06/2022 e não representa toda a produção de 2022.';
+ if(monthly){el('min-label').textContent='Publicações com mês — mínimo';el('max-label').textContent='Publicações com mês — máximo';}
 
 function filtered(){
  const min=Number(el('min').value||0),max=el('max').value===''?Infinity:Number(el('max').value);
@@ -54,7 +68,7 @@ function renderChart(items){
  const area=d3.area().x((d,i)=>x(i)).y0(d=>y(d[0])).y1(d=>y(d[1])).curve(d3.curveMonotoneX);
  svg.selectAll('path.layer').data(layers).join('path').attr('class','layer').attr('d',area).attr('fill',layer=>color(layer.key)).on('pointermove',function(event,layer){
   const item=byId.get(layer.key),i=Math.max(0,Math.min(periods.length-1,Math.round(x.invert(d3.pointer(event,svg.node())[0]))));
-  tip.textContent=item.nome+'\nPosição: #'+fmt(item.posicao)+' · Total no corpus: '+fmt(item.total)+' publicações\n'+periods[i]+': '+fmt(item.serie[i])+' publicações\nPublicações com mês: '+fmt(item.com_mes)+' · Sem mês: '+fmt(item.sem_mes);
+  tip.textContent=item.nome+'\nPosição: #'+fmt(item.posicao)+(monthly?' · Total com mês conhecido: ':' · Total no corpus: ')+fmt(item.total)+' publicações\n'+periods[i]+': '+fmt(item.serie[i])+' publicações\n'+(monthly?'Contribuições sem mês excluídas: '+fmt(item.sem_mes):'Publicações com mês: '+fmt(item.com_mes)+' · Sem mês: '+fmt(item.sem_mes));
   tip.style.display='block';tip.style.left=Math.max(10,Math.min(event.clientX+15,window.innerWidth-430))+'px';tip.style.top=Math.max(10,Math.min(event.clientY+15,window.innerHeight-180))+'px';
  }).on('pointerleave',()=>tip.style.display='none');
  const ticks=periods.length<=6?d3.range(periods.length):[...new Set([...d3.range(0,periods.length,6),periods.length-1])];
