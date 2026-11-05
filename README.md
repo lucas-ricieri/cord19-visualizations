@@ -143,7 +143,3 @@ Os parâmetros estão em [src/config.py](src/config.py), e os cinco grupos de DO
 O [notebook de coleta OpenAlex](notebooks/enriquecimento/01_coleta_openalex.ipynb)  está separado do fluxo principal e desativado por padrão (`EXECUTAR_CONSULTAS=False`). Nessa configuração, não envia requisições nem grava arquivos.
 
 Esse artefato documenta a origem do enriquecimento. A execução dos seis notebooks utiliza o checkpoint já fornecido.
-
-## Versão anterior
-
-A [branch `old-version`](https://github.com/lucas-ricieri/cord19-visualizations/tree/old-version) preserva o projeto anterior, com quatro visualizações: LDA e streamgraph completos e amostrados. A `main` gera o LDA completo e os streamgraphs anual e mensal, sem amostragem.
