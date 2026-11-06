@@ -49,7 +49,8 @@ def export_author_streamgraph(authors, counts, methodology, monthly=False):
                    'Uma publicação inteira por nome e artigo; sem desambiguação de pessoas. '
                    'Inclui instituições e grupos. Séries anuais incluem publicações sem mês conhecido.')
     if monthly:
-        description = '15% mais produtivos por contribuições com mês conhecido; contribuições sem mês são excluídas.'
+        description = ('15% dos nomes de autores mais produtivos por contribuições com mês conhecido. '
+                       'Grupos e instituições identificados nos metadados são excluídos do ranking.')
     payload = {'tipo': 'autores', 'granularidade': 'mensal' if monthly else 'anual', 'itens': rows,
                'periodos': periods, 'padrao': cfg.AUTHOR_DEFAULT_VISIBLE, 'cores': cfg.AUTHOR_COLORS,
                'descricao': description, 'titulo': 'Publicações por nome de autor' + (' — mensal' if monthly else ''),

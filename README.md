@@ -18,7 +18,7 @@ O LDA utiliza o corpus completo após a curadoria e os filtros textuais. O strea
 
 Para visualizar os resultados sem executar o processamento, use a página publicada ou abra `Page/index.html` localmente. Os links acima abrem diretamente as visualizações publicadas no GitHub Pages.
 
-O [streamgraph mensal](https://lucas-ricieri.github.io/cord19-visualizations/outputs/visualizations/streamgraph_autores_mensal.html) exclui contribuições sem mês conhecido e recalcula os 15% mais produtivos entre os nomes com contribuições elegíveis. Seus totais, filtros e posições consideram apenas a produção com mês; não é atribuído mês artificial às datas anuais. O ranking pode diferir do anual.
+O [streamgraph mensal](https://lucas-ricieri.github.io/cord19-visualizations/outputs/visualizations/streamgraph_autores_mensal.html) exclui contribuições sem mês conhecido e grupos ou instituições identificados por padrões e nomes conhecidos no campo de autoria. O ranking seleciona os 15% mais produtivos entre os nomes elegíveis. As datas anuais conservam a precisão original. O filtro textual pode deixar casos ambíguos.
 
 ## Dados necessários
 
@@ -133,7 +133,7 @@ Além dos três HTMLs, a execução local produz tokens, dicionários, corpora, 
 ## Critérios de análise
 
 - **Texto e tópicos:** títulos e resumos passam por lematização com spaCy, remoção de stopwords, formação de bigramas e construção de bag of words. O LDA usa Gensim, 20 tópicos, dez passagens e aprendizagem online em minilotes de até 2.000 documentos.
-- **Autores:** cada par artigo × nome normalizado é contado uma vez. Cada coautor recebe uma publicação inteira; a soma das camadas representa autorias. Nomes são normalizados; grupos e instituições permanecem na base.
+- **Autores:** cada par artigo × nome normalizado é contado uma vez. Cada coautor recebe uma publicação inteira. A soma das camadas representa autorias. A exclusão de grupos e instituições identificados é aplicada ao ranking mensal.
 - **Período:** as séries do streamgraph têm três observações anuais, de 2020 a 2022. O mensal usa contagens por mês e exclui datas sem mês conhecido. As curvas entre períodos são interpolações visuais. O release de junho não cobre todo o ano de 2022.
 
 Os parâmetros estão em [src/config.py](src/config.py), e os cinco grupos de DOI em conflito têm suas decisões documentadas em [configuracao/resolucoes_doi.csv](configuracao/resolucoes_doi.csv).
